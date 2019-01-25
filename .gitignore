@@ -9,6 +9,7 @@
 .gcc-flags.json
 sonoff/user_config_override.h
 build
+experimental
 README.md
 
 ## Visual Studio Code specific ######
