@@ -145,28 +145,31 @@ const char HTTP_SCRIPT_CONSOL[] PROGMEM =
     "return false;"
   "}"
   "</script>";
-
 const char HTTP_SCRIPT_MODULE1[] PROGMEM =
   "var os;"
   "function sk(s,g){"            // s = value, g = id and name
-    "var o=os.replace(\"value='\"+s+\"'\",\"selected value='\"+s+\"'\");"
+    "var o=os.replace(/}1/g,\"<option value=\").replace(/}2/g,\"</option>\").replace(\"value='\"+s+\"'\",\"selected value='\"+s+\"'\");"
     "eb('g'+g).innerHTML=o;"
   "}"
   "function sl(){"
-    "if(x!=null){x.abort();}"    // Abort any request pending
-    "x=new XMLHttpRequest();"
-    "x.onreadystatechange=function(){"
-      "if(x.readyState==4&&x.status==200){"
-        "var i,o=x.responseText.replace(/}1/g,\"<option value=\").replace(/}2/g,\"</option>\");"
-        "i=o.indexOf(\"}3\");"   // String separator means do not use "}3" in Module name and Sensor name
-        "os=o.substring(0,i);"
+    "a=new XMLHttpRequest();"
+    "a.onreadystatechange=function(){"
+      "if(a.readyState==4&&a.status==200){"
+        "os=a.responseText;"
         "sk(}4,99);"
-        "os=o.substring(i+2);";  // +2 is length "}3"
+      "}"
+    "};"
+    "a.open('GET','md?m=1',true);"  // ?m related to WebServer->hasArg("m")
+    "a.send();"
+    "b=new XMLHttpRequest();"
+    "b.onreadystatechange=function(){"
+      "if(b.readyState==4&&b.status==200){"
+        "os=b.responseText;";
 const char HTTP_SCRIPT_MODULE2[] PROGMEM =
       "}"
     "};"
-    "x.open('GET','md?m=1',true);"  // ?m related to WebServer->hasArg("m")
-    "x.send();"
+    "b.open('GET','md?g=1',true);"  // ?g related to WebServer->hasArg("g")
+    "b.send();"
   "}";
 const char HTTP_SCRIPT_MODULE3[] PROGMEM =
   "}1'%d'>%s (%d)}2";            // "}1" and "}2" means do not use "}x" in Module name and Sensor name
@@ -817,7 +820,12 @@ void HandleModuleConfiguration(void)
       snprintf_P(mqtt_data, sizeof(mqtt_data), HTTP_SCRIPT_MODULE3, midx, AnyModuleName(midx).c_str(), midx +1);
       page += mqtt_data;
     }
-    page += "}3";  // String separator means do not use "}3" in Module name and Sensor name
+    WebServer->send(200, FPSTR(HDR_CTYPE_PLAIN), page);
+    return;
+  }
+
+  if (WebServer->hasArg("g")) {
+    String page = "";
     for (uint8_t j = 0; j < sizeof(kGpioNiceList); j++) {
       midx = pgm_read_byte(kGpioNiceList + j);
       if (!GetUsedInModule(midx, cmodule.io)) {
@@ -856,7 +864,7 @@ void HandleModuleConfiguration(void)
   for (uint8_t i = 0; i < sizeof(cmodule); i++) {
     if (GPIO_USER == ValidGPIO(i, cmodule.io[i])) {
       snprintf_P(stemp, 3, PINS_WEMOS +i*2);
-      snprintf_P(mqtt_data, sizeof(mqtt_data), PSTR("<tr><td style='width:190px'>%s <b>" D_GPIO "%d</b> %s</td><td style='width:160px'><select id='g%d' name='g%d'></select></td></tr>"),
+      snprintf_P(mqtt_data, sizeof(mqtt_data), PSTR("<tr><td style='width:190px'>%s <b>" D_GPIO "%d</b> %s</td><td style='width:176px'><select id='g%d' name='g%d'></select></td></tr>"),
         (WEMOS==Settings.module)?stemp:"", i, (0==i)? D_SENSOR_BUTTON "1":(1==i)? D_SERIAL_OUT :(3==i)? D_SERIAL_IN :(9==i)? "<font color='red'>ESP8285</font>" :(10==i)? "<font color='red'>ESP8285</font>" :(12==i)? D_SENSOR_RELAY "1":(13==i)? D_SENSOR_LED "1i":(14==i)? D_SENSOR :"", i, i);
       page += mqtt_data;
     }
