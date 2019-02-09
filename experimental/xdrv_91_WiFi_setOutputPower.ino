@@ -30,9 +30,9 @@
 
 #define XDRV_91 91
 
-boolean Xdrv91_Command(void)
+bool Xdrv91_Command(void)
 {
-  boolean serviced = true;
+  bool serviced = true;
   uint8_t paramcount = 0;
   if (XdrvMailbox.data_len > 0) {
     paramcount=1;
@@ -56,9 +56,9 @@ boolean Xdrv91_Command(void)
   return serviced;
 }
 
-boolean Xdrv91(byte function)
+bool Xdrv91(byte function)
 {
-  boolean result = false;
+  bool result = false;
   switch (function) {
     case FUNC_COMMAND:
         if (XDRV_91 == XdrvMailbox.index) {
