@@ -37,9 +37,9 @@ void Xsns91_TeleCounterJSON(void)
   tele_counter = 0;
 }
 
-boolean Xsns91(byte function)
+bool Xsns91(byte function)
 {
-  boolean result = false;
+  bool result = false;
   switch (function) {
     case FUNC_EVERY_SECOND:
       tele_counter++;
