@@ -288,6 +288,8 @@
 #define D_TELEMETRY_PERIOD "Interval telemetrie"
 
 #define D_OTHER_PARAMETERS "Ostatné nastavenia"
+#define D_TEMPLATE "Template"
+#define D_ACTIVATE "Activate"
 #define D_WEB_ADMIN_PASSWORD "Heslo Web administrátora"
 #define D_MQTT_ENABLE "MQTT aktívne"
 #define D_FRIENDLY_NAME "Friendly Name"
@@ -481,7 +483,6 @@
 #define D_TX20_SOUTH "J"
 #define D_TX20_WEST "Z"
 
-
 // sonoff_template.h - keep them as short as possible to be able to fit them in GUI drop down box
 #define D_SENSOR_NONE          "Žiaden"
 #define D_SENSOR_DHT11         "DHT11"
@@ -559,6 +560,12 @@
 #define D_SENSOR_SM16716_CLK   "SM16716 CLK"
 #define D_SENSOR_SM16716_DAT   "SM16716 DAT"
 #define D_SENSOR_SM16716_POWER "SM16716 PWR"
+#define D_SENSOR_MY92X1_DI     "MY92x1 DI"
+#define D_SENSOR_MY92X1_DCKI   "MY92x1 DCKI"
+#define D_SENSOR_ARIRFRCV      "ALux IrRcv"
+#define D_SENSOR_TXD           "Serial Tx"
+#define D_SENSOR_RXD           "Serial Rx"
+#define D_SENSOR_ROTARY        "Rotary"     // Suffix "1A"
 
 // Units
 #define D_UNIT_AMPERE "A"

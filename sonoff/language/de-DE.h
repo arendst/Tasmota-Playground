@@ -288,6 +288,8 @@
 #define D_TELEMETRY_PERIOD "Telemetrieperiode"
 
 #define D_OTHER_PARAMETERS "Sonstige Einstellungen"
+#define D_TEMPLATE "Vorlage"
+#define D_ACTIVATE "Aktivieren"
 #define D_WEB_ADMIN_PASSWORD "Passwort für Web Oberfläche"
 #define D_MQTT_ENABLE "MQTT aktivieren"
 #define D_FRIENDLY_NAME "Name [friendly name]"
@@ -558,6 +560,12 @@
 #define D_SENSOR_SM16716_CLK   "SM16716 CLK"
 #define D_SENSOR_SM16716_DAT   "SM16716 DAT"
 #define D_SENSOR_SM16716_POWER "SM16716 PWR"
+#define D_SENSOR_MY92X1_DI     "MY92x1 DI"
+#define D_SENSOR_MY92X1_DCKI   "MY92x1 DCKI"
+#define D_SENSOR_ARIRFRCV      "ALux IrRcv"
+#define D_SENSOR_TXD           "Serial Tx"
+#define D_SENSOR_RXD           "Serial Rx"
+#define D_SENSOR_ROTARY        "Rotary"     // Suffix "1A"
 
 // Units
 #define D_UNIT_AMPERE "A"

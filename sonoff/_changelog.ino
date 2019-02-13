@@ -1,4 +1,9 @@
-/* 6.4.1.15 20190208
+/* 6.4.1.16 20190211
+ * Initial support for online template change using command Template or GUI Configure Other (#5177)
+ * Add parameter CFG_HOLDER to status 1 message (#5206)
+ * Update GUI
+ *
+ * 6.4.1.15 20190208
  * Change image name BE_MINIMAL to FIRMWARE_MINIMAL (#5106)
  * Change image names USE_xyz to FIRMWARE_xyz (#5106)
  * Add command SerialDelimiter 128 to filter reception of only characters between ASCII 32 and 127 (#5131)
