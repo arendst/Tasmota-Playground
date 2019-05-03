@@ -116,7 +116,7 @@ void Energy200ms(void)
   if (5 == energy_fifth_second) {
     energy_fifth_second = 0;
 
-    XnrgCall(FUNC_EVERY_SECOND);
+    XnrgCall(FUNC_ENERGY_EVERY_SECOND);
 
     if (RtcTime.valid) {
       if (LocalTime() == Midnight()) {
@@ -689,14 +689,14 @@ bool Xdrv03(uint8_t function)
   }
   else if (energy_flg) {
     switch (function) {
+      case FUNC_LOOP:
+        XnrgCall(FUNC_LOOP);
+        break;
       case FUNC_COMMAND:
         result = EnergyCommand();
         break;
       case FUNC_SET_POWER:
         EnergySetPowerSteadyCounter();
-        break;
-      case FUNC_LOOP:
-        XnrgCall(FUNC_LOOP);
         break;
       case FUNC_SERIAL:
         result = XnrgCall(FUNC_SERIAL);
@@ -717,6 +717,7 @@ bool Xsns03(uint8_t function)
         break;
       case FUNC_EVERY_SECOND:
         EnergyMarginCheck();
+        XnrgCall(FUNC_EVERY_SECOND);
         break;
       case FUNC_JSON_APPEND:
         EnergyShow(true);

@@ -28,7 +28,7 @@
  * Use online command StateText to translate ON, OFF, HOLD and TOGGLE.
  * Use online command Prefix to translate cmnd, stat and tele.
  *
- * Updated until v6.4.1.18
+ * Updated until v6.5.0.7
 \*********************************************************************/
 
 //#define LANGUAGE_MODULE_NAME         // Enable to display "Module Generic" (ie Spanish), Disable to display "Generic Module" (ie English)
@@ -54,7 +54,7 @@
 #define D_ADMIN "Admin"
 #define D_AIR_QUALITY "Luftqualität"
 #define D_AP "AP"                    // Access Point
-#define D_AS "wie"
+#define D_AS "als"
 #define D_AUTO "AUTO"
 #define D_BLINK "Blinken"
 #define D_BLINKOFF "BlinkenAus"
@@ -93,6 +93,7 @@
 #define D_FALLBACK_TOPIC "Fallback-Topic"
 #define D_FALSE "falsch"
 #define D_FILE "Datei"
+#define D_FLOW_RATE "Durchflussmenge"
 #define D_FREE_MEMORY "Freier Arbeitsspeicher"
 #define D_FREQUENCY "Frequenz"
 #define D_GAS "Gas"
@@ -156,6 +157,7 @@
 #define D_TO "zu"
 #define D_TOGGLE "An/Aus"
 #define D_TOPIC "topic"
+#define D_TOTAL_USAGE "Total Usage"
 #define D_TRANSMIT "Übertragen"
 #define D_TRUE "wahr"
 #define D_TVOC "TVOC"
@@ -305,6 +307,7 @@
 #define D_BASE_TYPE "basiert auf"
 #define D_TEMPLATE_FLAGS "Options"
 #define D_ALLOW_ADC0 "ADC0 input"
+#define D_ALLOW_ADC0_TEMP "ADC0 Temperatur"
 #define D_ALLOW_PULLUP "Nutzer pull-up Auswahl"
 
 #define D_SAVE_CONFIGURATION "Konfiguration speichern"
@@ -430,7 +433,7 @@
 #define D_KNX_COMMAND_READ "Lesen"
 #define D_KNX_COMMAND_OTHER "Andere"
 #define D_SENT_TO "gesendet an"
-#define D_KNX_WARNING "Die Gruppenadresse ( 0 / 0 / 0 ) ist reserviert und kann nicht verwendet werden."
+#define D_KNX_WARNING "Die Gruppenadresse (0/0/0) ist reserviert und kann nicht verwendet werden."
 #define D_KNX_ENHANCEMENT "Erweiterte Kommunikation"
 #define D_KNX_TX_SLOT "KNX TX"
 #define D_KNX_RX_SLOT "KNX RX"
@@ -491,6 +494,9 @@
 #define D_TX20_EAST "O"
 #define D_TX20_SOUTH "S"
 #define D_TX20_WEST "W"
+
+//xsns_43_hre.ino
+#define D_LOG_HRE "HRE: "
 
 // sonoff_template.h - keep them as short as possible to be able to fit them in GUI drop down box
 #define D_SENSOR_NONE          "None"
@@ -576,12 +582,17 @@
 #define D_SENSOR_TXD           "Serial Tx"
 #define D_SENSOR_RXD           "Serial Rx"
 #define D_SENSOR_ROTARY        "Rotary"     // Suffix "1A"
+#define D_SENSOR_HRE_CLOCK     "HRE Clock"
+#define D_SENSOR_HRE_DATA      "HRE Data"
+#define D_SENSOR_ADE7953_IRQ   "ADE7953 IRQ"
 
 // Units
 #define D_UNIT_AMPERE "A"
 #define D_UNIT_CENTIMETER "cm"
 #define D_UNIT_HERTZ "Hz"
 #define D_UNIT_HOUR "h"
+#define D_UNIT_GALLONS "gal"
+#define D_UNIT_GALLONS_PER_MIN "g/m"
 #define D_UNIT_INCREMENTS "inc"
 #define D_UNIT_KILOGRAM "kg"
 #define D_UNIT_KILOMETER_PER_HOUR "km/h"

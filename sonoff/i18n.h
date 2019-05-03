@@ -69,6 +69,7 @@
 #define D_JSON_FLASHCHIPID "FlashChipId"
 #define D_JSON_FLASHMODE "FlashMode"
 #define D_JSON_FLASHSIZE "FlashSize"
+#define D_JSON_FLOWRATE "FlowRate"
 #define D_JSON_FREEMEMORY "Free"
 #define D_JSON_FREQUENCY "Frequency"
 #define D_JSON_FROM "from"
@@ -143,6 +144,7 @@
 #define D_JSON_TIME "Time"
 #define D_JSON_TODAY "Today"
 #define D_JSON_TOTAL "Total"
+#define D_JSON_TOTAL_USAGE "TotalUsage"
 #define D_JSON_TOTAL_REACTIVE "TotalReactivePower"
 #define D_JSON_TOTAL_START_TIME "TotalStartTime"
 #define D_JSON_TVOC "TVOC"
@@ -264,6 +266,7 @@
 #define D_CMND_ALTITUDE "Altitude"
 #define D_CMND_LEDPOWER "LedPower"
 #define D_CMND_LEDSTATE "LedState"
+#define D_CMND_LEDMASK "LedMask"
 #define D_CMND_I2CSCAN "I2CScan"
 #define D_CMND_SERIALSEND "SerialSend"
 #define D_CMND_SERIALDELIMITER "SerialDelimiter"
@@ -309,6 +312,7 @@
 #define D_CMND_WEBLOG "WebLog"
 #define D_CMND_WEBREFRESH "WebRefresh"
 #define D_CMND_WEBSEND "WebSend"
+#define D_CMND_WEBCOLOR "WebColor"
 #define D_CMND_EMULATION "Emulation"
 
 // Commands xdrv_03_energy.ino
@@ -495,7 +499,6 @@ const char S_JSON_COMMAND_NVALUE_ACTIVE_NVALUE[] PROGMEM =    "{\"%s\":\"%d (" D
 const char S_JSON_COMMAND_NVALUE[] PROGMEM =                  "{\"%s\":%d}";
 const char S_JSON_COMMAND_LVALUE[] PROGMEM =                  "{\"%s\":%lu}";
 const char S_JSON_COMMAND_SVALUE[] PROGMEM =                  "{\"%s\":\"%s\"}";
-const char S_JSON_COMMAND_HVALUE[] PROGMEM =                  "{\"%s\":\"#%X\"}";
 const char S_JSON_COMMAND_ASTERIX[] PROGMEM =                 "{\"%s\":\"" D_ASTERIX "\"}";
 const char S_JSON_COMMAND_XVALUE[] PROGMEM =                  "{\"%s\":%s}";  // %s must provide quotes on non-number
 
@@ -514,6 +517,8 @@ const char S_JSON_DRIVER_INDEX_SVALUE[] PROGMEM =             "{\"" D_CMND_DRIVE
 
 const char JSON_SNS_TEMP[] PROGMEM = ",\"%s\":{\"" D_JSON_TEMPERATURE "\":%s}";
 const char JSON_SNS_TEMPHUM[] PROGMEM = ",\"%s\":{\"" D_JSON_TEMPERATURE "\":%s,\"" D_JSON_HUMIDITY "\":%s}";
+
+const char JSON_SNS_GNGPM[] PROGMEM = ",\"%s\":{\"" D_JSON_TOTAL_USAGE "\":%s,\"" D_JSON_FLOWRATE "\":%s}";
 
 const char S_LOG_I2C_FOUND_AT[] PROGMEM = D_LOG_I2C "%s " D_FOUND_AT " 0x%x";
 
@@ -569,6 +574,8 @@ const char HTTP_SNS_ANALOG[] PROGMEM = "{s}%s " D_ANALOG_INPUT "%d{m}%d{e}";    
 const char HTTP_SNS_ILLUMINANCE[] PROGMEM = "{s}%s " D_ILLUMINANCE "{m}%d " D_UNIT_LUX "{e}";     // {s} = <tr><th>, {m} = </th><td>, {e} = </td></tr>
 const char HTTP_SNS_CO2[] PROGMEM = "{s}%s " D_CO2 "{m}%d " D_UNIT_PARTS_PER_MILLION "{e}";       // {s} = <tr><th>, {m} = </th><td>, {e} = </td></tr>
 const char HTTP_SNS_CO2EAVG[] PROGMEM = "{s}%s " D_ECO2 "{m}%d " D_UNIT_PARTS_PER_MILLION "{e}";  // {s} = <tr><th>, {m} = </th><td>, {e} = </td></tr>
+const char HTTP_SNS_GALLONS[] PROGMEM = "{s}%s " D_TOTAL_USAGE "{m}%s " D_UNIT_GALLONS " {e}";    // {s} = <tr><th>, {m} = </th><td>, {e} = </td></tr>
+const char HTTP_SNS_GPM[] PROGMEM = "{s}%s " D_FLOW_RATE "{m}%s " D_UNIT_GALLONS_PER_MIN" {e}";   // {s} = <tr><th>, {m} = </th><td>, {e} = </td></tr>
 
 const char S_MAIN_MENU[] PROGMEM = D_MAIN_MENU;
 const char S_CONFIGURATION[] PROGMEM = D_CONFIGURATION;
