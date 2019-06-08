@@ -1,9 +1,61 @@
-/* 6.5.0.9 20190418
+/*
+ * 6.5.0.15 20190606
+ * Change pubsubclient MQTT_KEEPALIVE from 10 to 30 seconds in preparation of AWS IoT support
+ * Add support for AWS IoT with TLS 1.2 on core 2.5.2. Full doc here: https://github.com/arendst/Sonoff-Tasmota/wiki/AWS-IoT
+ * Add some MQTT housekeeping which might solve issue (#5755)
+ * Add command SetOption65 0/1 and more Tuya Serial based device support (#5815)
+ *
+ * 6.5.0.14 20190602
+ * Change webserver HTML input, button, textarea, and select name based on id
+ * Fix webserver multiple Javascript window.onload functionality
+ * Fix PZem startup issue (#5875)
+ * Add command SetOption39 1..255 to control CSE7766 (Pow R2) or HLW8032 (Blitzwolf SHP5) handling of power loads below 6W. Default setting is 128 (#5756)
+ * Add Toggle functionality to button double press when more devices are detected
+ *
+ * 6.5.0.13 20190527
+ * Add command SetOption38 6..255 to set IRReceive protocol detection sensitivity mimizing UNKNOWN protocols (#5853)
+ * Fix missing white channel for WS2812 (#5869)
+ * Add reset of Energy values when connection to sensor is lost for over 4 seconds (#5874, #5881)
+ * Work-around for Philips Hue emulation issue by using part of MAC address for LightId (#5849)
+ * Add support to Stage Arduino Core (next 2.6.0)
+ *
+ * 6.5.0.12 20190521
+ * Add AriLux RF control GPIO option "ALux IrSel" (159) replacing "Led4i" (59) for full LED control (#5709)
+ * Add LED GPIO option "LedLink" (157) and "LedLinki" (158) to select dedicated link status LED (#5709)
+ * Add support for up to four LEDs related to four power outputs. Enabled when "LedLink(i)" is configured too (#5709)
+ * Add extended LED power control using command LedPowerX where X is 1 to 4. Enabled when "LedLink(i)" is configured too (#5709)
+ * Fix core 2.5.x ISR not in IRAM exception (#5837)
+ * Add support for VL53L0x time of flight sensor. Might interfere with TSL2561 using same I2C address (#5845)
+ * Add command AdcParam to control ADC0 Temperature and Light formula parameters
+ * Change default PowerDelta from 80% to 0% on new installations (#5858, #5028, #4813, #4130, #4145, #3795, #3778, #3660, #3648)
+ *
+ * 6.5.0.11 20190517
+ * Add command SetOption64 0/1 to switch between "-" or "_" as sensor index separator impacting DS18X20, DHT, BMP and SHT3X sensor names (#5689)
+ * Add initial support for Scripts as replacement for Rules. Default disabled but can be enabled in my_user_config.h (#5689)
+ * Add rule System#Save executed just before a planned restart
+ * Add HX711 weight restore after controlled restart or after power restore just before executing command Sensor34 7 (#5367, #5786)
+ * Remove define USE_EMULATION from my_user_config.h (#5826)
+ * Add defines USE_EMULATION_WEMO and USE_EMULATION_HUE to my_user_config.h to control emulation features at compile time (#5826)
+ * Add support for SPS30 Particle sensor thanks to Gerhard Mutz (#5830)
+ *
+ * 6.5.0.10 20190513
+ * Enable ADC0 by default in my_user_config.h (#5671)
+ * Add user configurable ADC0 to Module and Template configuration compatible with current FLAG options (#5671)
+ * Add support for Shelly 1PM Template {"NAME":"Shelly 1PM","GPIO":[56,0,0,0,82,134,0,0,0,0,0,21,0],"FLAG":2,"BASE":18} (#5716)
+ * Fix Sonoff Pow R2 / S31 invalid energy increments (#5789)
+ * Add device OverTemp (>73 Celsius) detection to any Energy Monitoring device with temperature sensor powering off all outputs
+ * Add rule support for single JSON value pair like {"SSerialReceived":"on"} by expanding it to {"SSerialReceived":{"Data":"on"}} allowing for trigger SSerialReceived#Data=on (#5638)
+ *
+ * 6.5.0.9 20190418
  * Add command SetOption63 0/1 to disable relay state feedback scan at restart (#5594, #5663)
  * Fix TasmotaSerial at 9600 bps solving DFPlayer comms (#5528)
  * Fix Shelly 2.5 overtemp
  * Set gamma correction as default behavior, ie "Ledtable 1"
  * Refactored management of lights, using classes and integers instead of floats.
+ * Extend PWM resolution from 8 to 10 bits for low brightness lights
+ * Allow all 5 PWM channels individually adressable with LEDs. (#5741)
+ * Fixed inversion of WC/WW channels, back to RGBCW
+ * Fixed the Unescape() function and the SendSerial3 behaviour
  *
  * 6.5.0.8 20190413
  * Add Tuya Dimmer 10 second heartbeat serial packet required by some Tuya dimmer secondary MCUs

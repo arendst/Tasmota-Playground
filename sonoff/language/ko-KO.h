@@ -222,7 +222,7 @@
 
 // xdrv_02_webserver.ino
 #define D_NOSCRIPT "Tasmota를 사용하려면 JavaScript를 활성화 하십시오."
-#define D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "MINIMAL firmware<br/>업그레이드가 필요합니다"
+#define D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "MINIMAL firmware<br>업그레이드가 필요합니다"
 #define D_WEBSERVER_ACTIVE_ON "Web 서버 작동 중"
 #define D_WITH_IP_ADDRESS "IP 주소"
 #define D_WEBSERVER_STOPPED "Web 서버 멈춤"
@@ -257,6 +257,7 @@
 #define D_MODULE_PARAMETERS "모듈 상세"
 #define D_MODULE_TYPE "모듈 타입"
 #define D_PULLUP_ENABLE "No Button/Switch pull-up"
+#define D_ADC "ADC"
 #define D_GPIO "GPIO"
 #define D_SERIAL_IN "Serial In"
 #define D_SERIAL_OUT "Serial Out"
@@ -306,9 +307,6 @@
 #define D_TEMPLATE_NAME "이름"
 #define D_BASE_TYPE "Based on"
 #define D_TEMPLATE_FLAGS "옵션"
-#define D_ALLOW_ADC0 "ADC0 입력"
-#define D_ALLOW_ADC0_TEMP "ADC0 temperature"
-#define D_ALLOW_PULLUP "User pull-up selection"
 
 #define D_SAVE_CONFIGURATION "설정 저장"
 #define D_CONFIGURATION_SAVED "설정 저장 완료"
@@ -514,6 +512,7 @@
 #define D_SENSOR_BUTTON        "Button"     // Suffix "1"
 #define D_SENSOR_RELAY         "Relay"      // Suffix "1i"
 #define D_SENSOR_LED           "Led"        // Suffix "1i"
+#define D_SENSOR_LED_LINK      "LedLink"    // Suffix "i"
 #define D_SENSOR_PWM           "PWM"        // Suffix "1"
 #define D_SENSOR_COUNTER       "Counter"    // Suffix "1"
 #define D_SENSOR_IRRECV        "IRrecv"
@@ -579,6 +578,7 @@
 #define D_SENSOR_MY92X1_DI     "MY92x1 DI"
 #define D_SENSOR_MY92X1_DCKI   "MY92x1 DCKI"
 #define D_SENSOR_ARIRFRCV      "ALux IrRcv"
+#define D_SENSOR_ARIRFSEL      "ALux IrSel"
 #define D_SENSOR_TXD           "Serial Tx"
 #define D_SENSOR_RXD           "Serial Rx"
 #define D_SENSOR_ROTARY        "Rotary"     // Suffix "1A"

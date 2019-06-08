@@ -99,7 +99,6 @@ const uint16_t PWM_MIN = 100;               // [PWM_MIN] Minimum frequency - Def
                                             //    For Controlling Servos use 50 and also set PWM_FREQ as 50 (DO NOT USE THESE VALUES FOR DIMMERS)
 //#define PWM_LIGHTSCHEME0_IGNORE_SLEEP       // Do not change sleep value for LightAnimate() scheme 0
 
-const uint8_t DEFAULT_POWER_DELTA = 80;     // Power change percentage
 const uint16_t MAX_POWER_HOLD = 10;         // Time in SECONDS to allow max agreed power
 const uint16_t MAX_POWER_WINDOW = 30;       // Time in SECONDS to disable allow max agreed power
 const uint16_t SAFE_POWER_HOLD = 10;        // Time in SECONDS to allow max unit safe power
@@ -120,12 +119,6 @@ const uint16_t LOGSZ = 520;                 // Max number of characters in log
 const uint16_t MIN_MESSZ = 893;             // Min number of characters in MQTT message
 
 const uint8_t SENSOR_MAX_MISS = 5;          // Max number of missed sensor reads before deciding it's offline
-
-#ifdef USE_MQTT_TLS
-  const uint16_t WEB_LOG_SIZE = 2000;       // Max number of characters in weblog
-#else
-  const uint16_t WEB_LOG_SIZE = 4000;       // Max number of characters in weblog
-#endif
 
 const uint8_t MAX_BACKLOG = 30;             // Max number of commands in backlog
 const uint32_t MIN_BACKLOG_DELAY = 2;       // Minimal backlog delay in 0.1 seconds
@@ -237,14 +230,14 @@ enum ButtonStates { PRESSED, NOT_PRESSED };
 
 enum Shortcuts { SC_CLEAR, SC_DEFAULT, SC_USER };
 
-enum SettingsParmaIndex {P_HOLD_TIME, P_MAX_POWER_RETRY, P_TUYA_DIMMER_ID, P_MDNS_DELAYED_START, P_BOOT_LOOP_OFFSET, P_RGB_REMAP, P_MAX_PARAM8};  // Max is PARAM8_SIZE (18) - SetOption32 until SetOption49
+enum SettingsParmaIndex {P_HOLD_TIME, P_MAX_POWER_RETRY, P_TUYA_DIMMER_ID, P_MDNS_DELAYED_START, P_BOOT_LOOP_OFFSET, P_RGB_REMAP, P_IR_UNKNOW_THRESHOLD, P_CSE7766_INVALID_POWER, P_MAX_PARAM8};  // Max is PARAM8_SIZE (18) - SetOption32 until SetOption49
 
 enum DomoticzSensors {DZ_TEMP, DZ_TEMP_HUM, DZ_TEMP_HUM_BARO, DZ_POWER_ENERGY, DZ_ILLUMINANCE, DZ_COUNT, DZ_VOLTAGE, DZ_CURRENT, DZ_AIRQUALITY, DZ_MAX_SENSORS};
 
 enum Ws2812ClockIndex { WS_SECOND, WS_MINUTE, WS_HOUR, WS_MARKER };
 enum Ws2812Color { WS_RED, WS_GREEN, WS_BLUE };
 
-enum LightSubtypes { LST_NONE, LST_SINGLE, LST_COLDWARM, LST_RGB,   LST_RGBW, LST_RGBWC };                   // Do not insert new fields
+enum LightSubtypes { LST_NONE, LST_SINGLE, LST_COLDWARM, LST_RGB,   LST_RGBW, LST_RGBWC, LST_MAX=5 };   // Do not insert new fields
 enum LightTypes    { LT_BASIC, LT_PWM1,    LT_PWM2,      LT_PWM3,   LT_PWM4,  LT_PWM5,  LT_PWM6, LT_PWM7,
                      LT_NU8,   LT_SERIAL1, LT_SERIAL2,   LT_WS2812, LT_RGBW,  LT_RGBWC, LT_NU14, LT_NU15 };  // Do not insert new fields
 

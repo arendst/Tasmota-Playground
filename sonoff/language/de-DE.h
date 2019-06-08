@@ -222,7 +222,7 @@
 
 // xdrv_02_webserver.ino
 #define D_NOSCRIPT "JavaScript aktivieren um Tasmota benutzen zu können"
-#define D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "MINIMUM-Firmware<br/>bitte upgraden"
+#define D_MINIMAL_FIRMWARE_PLEASE_UPGRADE "MINIMUM-Firmware<br>bitte upgraden"
 #define D_WEBSERVER_ACTIVE_ON "Web-Server aktiv bei"
 #define D_WITH_IP_ADDRESS "mit IP-Adresse"
 #define D_WEBSERVER_STOPPED "Web-Server angehalten"
@@ -257,6 +257,7 @@
 #define D_MODULE_PARAMETERS "Geräte-Einstellungen"
 #define D_MODULE_TYPE "Gerätetyp"
 #define D_PULLUP_ENABLE "Kein Taster/Schalter Pull-up"
+#define D_ADC "ADC"
 #define D_GPIO "GPIO"
 #define D_SERIAL_IN "serieller Eingang [serial in]"
 #define D_SERIAL_OUT "serieller Ausgang [serial out]"
@@ -306,9 +307,6 @@
 #define D_TEMPLATE_NAME "Name"
 #define D_BASE_TYPE "basiert auf"
 #define D_TEMPLATE_FLAGS "Options"
-#define D_ALLOW_ADC0 "ADC0 input"
-#define D_ALLOW_ADC0_TEMP "ADC0 Temperatur"
-#define D_ALLOW_PULLUP "Nutzer pull-up Auswahl"
 
 #define D_SAVE_CONFIGURATION "Konfiguration speichern"
 #define D_CONFIGURATION_SAVED "Konfiguration gespeichert"
@@ -514,6 +512,7 @@
 #define D_SENSOR_BUTTON        "Button"     // Suffix "1"
 #define D_SENSOR_RELAY         "Relay"      // Suffix "1i"
 #define D_SENSOR_LED           "Led"        // Suffix "1i"
+#define D_SENSOR_LED_LINK      "LedLink"    // Suffix "i"
 #define D_SENSOR_PWM           "PWM"        // Suffix "1"
 #define D_SENSOR_COUNTER       "Counter"    // Suffix "1"
 #define D_SENSOR_IRRECV        "IRrecv"
@@ -579,6 +578,7 @@
 #define D_SENSOR_MY92X1_DI     "MY92x1 DI"
 #define D_SENSOR_MY92X1_DCKI   "MY92x1 DCKI"
 #define D_SENSOR_ARIRFRCV      "ALux IrRcv"
+#define D_SENSOR_ARIRFSEL      "ALux IrSel"
 #define D_SENSOR_TXD           "Serial Tx"
 #define D_SENSOR_RXD           "Serial Rx"
 #define D_SENSOR_ROTARY        "Rotary"     // Suffix "1A"
