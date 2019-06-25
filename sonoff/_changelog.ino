@@ -1,9 +1,21 @@
-/*
+/* 6.5.0.16 20190611
+ * Refactored TLS based on BearSSL, warning breaking change for fingerprints validation (see doc)
+ * Add checkbox to GUI password field enabling visibility during password entry only (#5934)
+ * Add using heap when more than 199 IRSend values need to be send. May need increase of define MQTT_MAX_PACKET_SIZE too (#5950)
+ * Fix channel command for dual dimmers (#5940)
+ * Add define USE_COUNTER to my_user_config.h to save space in sonoff-basic.bin and sonoff-minimal.bin
+ * Add define USE_DHT to my_user_config.h to save space in sonoff-basic.bin
+ * Change TLS+AWS IoT optimization for speed, code and memory footprint
+ * Add command SetOption40 0..250 to disable button functionality if activated for over 0.1 second. Needs SetOption1 1 and SetOption13 0 (#5449)
+ *
  * 6.5.0.15 20190606
  * Change pubsubclient MQTT_KEEPALIVE from 10 to 30 seconds in preparation of AWS IoT support
  * Add support for AWS IoT with TLS 1.2 on core 2.5.2. Full doc here: https://github.com/arendst/Sonoff-Tasmota/wiki/AWS-IoT
  * Add some MQTT housekeeping which might solve issue (#5755)
  * Add command SetOption65 0/1 and more Tuya Serial based device support (#5815)
+ * Fix include of my_user_config.h in sonoff_aws_iot.cpp (#5930)
+ * Fix exception 9 when syslog is enabled and NTP is just synced (#5917)
+ * Fix Toggle functionality to button double press when one button and two devices are detected (#5935)
  *
  * 6.5.0.14 20190602
  * Change webserver HTML input, button, textarea, and select name based on id

@@ -55,27 +55,28 @@ const char HTTP_HEAD[] PROGMEM =
 
   "<script>"
   "var x=null,lt,to,tp,pc='';"            // x=null allow for abortion
+
+#ifdef USE_JAVASCRIPT_ES6
+// Following bytes saving ES6 syntax fails on old browsers like IE 11 - https://kangax.github.io/compat-table/es6/
+  "eb=s=>document.getElementById(s);"     // Alias to save code space
+  "qs=s=>document.querySelector(s);"      // Alias to save code space
+  "sp=i=>eb(i).type=(eb(i).type==='text'?'password':'text');"  // Toggle password visibility
+  "wl=f=>window.addEventListener('load',f);" // Execute multiple window.onload
+  ;
+#else
   "function eb(s){"
-    "return document.getElementById(s);"  // Save code space
+    "return document.getElementById(s);"  // Alias to save code space
   "}"
   "function qs(s){"                       // Alias to save code space
     "return document.querySelector(s);"
   "}"
-
-  // https://www.htmlgoodies.com/beyond/javascript/article.php/3724571/Using-Multiple-JavaScript-Onload-Functions.htm
+  "function sp(i){"                       // Toggle password visibility
+    "eb(i).type=(eb(i).type==='text'?'password':'text');"
+  "}"
   "function wl(f){"                       // Execute multiple window.onload
-    "var o=window.onload;"
-    "if(typeof window.onload!='function'){"
-      "window.onload=f;"
-    "}else{"
-      "window.onload=function(){"
-        "if(o){"
-          "o();"
-        "}"
-        "f();"
-      "}"
-    "}"
+    "window.addEventListener('load',f);"
   "}";
+#endif
 
 const char HTTP_SCRIPT_COUNTER[] PROGMEM =
   "var cn=180;"                           // seconds
@@ -107,12 +108,19 @@ const char HTTP_SCRIPT_ROOT[] PROGMEM =
     "x.send();"
     "lt=setTimeout(la,%d);"               // Settings.web_refresh
   "}"
+
+#ifdef USE_JAVASCRIPT_ES6
+  "lb=p=>la('&d='+p);"                    // Dark - Bright &d related to lb(value) and WebGetArg("d", tmp, sizeof(tmp));
+  "lc=p=>la('&t='+p);"                    // Cold - Warm &t related to lc(value) and WebGetArg("t", tmp, sizeof(tmp));
+#else
   "function lb(p){"
     "la('&d='+p);"                        // &d related to WebGetArg("d", tmp, sizeof(tmp));
   "}"
   "function lc(p){"
     "la('&t='+p);"                        // &t related to WebGetArg("t", tmp, sizeof(tmp));
   "}"
+#endif
+
   "wl(la);";
 
 const char HTTP_SCRIPT_WIFI[] PROGMEM =
@@ -129,12 +137,10 @@ const char HTTP_SCRIPT_RELOAD_OTA[] PROGMEM =
   "setTimeout(function(){location.href='.';}," STR(HTTP_OTA_RESTART_RECONNECT_TIME) ");";
 
 const char HTTP_SCRIPT_CONSOL[] PROGMEM =
-  "var sn=0;"                             // Scroll position
-  "var id=0;"                             // Get most of weblog initially
+  "var sn=0,id=0;"                        // Scroll position, Get most of weblog initially
   "function l(p){"                        // Console log and command service
-    "var c,o,t;"
+    "var c,o='',t;"
     "clearTimeout(lt);"
-    "o='';"
     "t=eb('t1');"
     "if(p==1){"
       "c=eb('c1');"
@@ -229,9 +235,15 @@ const char HTTP_SCRIPT_TEMPLATE[] PROGMEM =
     "sk(17,99);"                          // 17 = WEMOS
     "st(" STR(USER_MODULE) ");"
   "}"
+
+#ifdef USE_JAVASCRIPT_ES6
+  "sl=()=>ld('tp?m=1',x2);"               // ?m related to WebServer->hasArg("m")
+#else
   "function sl(){"
     "ld('tp?m=1',x2);"                    // ?m related to WebServer->hasArg("m")
   "}"
+#endif
+
   "wl(sl);";
 
 const char HTTP_SCRIPT_MODULE1[] PROGMEM =
@@ -267,7 +279,7 @@ const char HTTP_SCRIPT_INFO_END[] PROGMEM =
   "wl(i);";
 
 const char HTTP_HEAD_LAST_SCRIPT[] PROGMEM =
-  "function id(){"                        // Add label name='' based on provided id=''
+  "function jd(){"                        // Add label name='' based on provided id=''
     "var t=0,i=document.querySelectorAll('input,button,textarea,select');"
     "while(i.length>=t){"
       "if(i[t]){"
@@ -276,7 +288,7 @@ const char HTTP_HEAD_LAST_SCRIPT[] PROGMEM =
       "t++;"
     "}"
   "}"
-  "wl(id);"                               // Add name='' to any id='' in input,button,textarea,select
+  "wl(jd);"                               // Add name='' to any id='' in input,button,textarea,select
   "</script>";
 
 const char HTTP_HEAD_STYLE1[] PROGMEM =
@@ -354,9 +366,9 @@ const char HTTP_FORM_WIFI[] PROGMEM =
   "<fieldset><legend><b>&nbsp;" D_WIFI_PARAMETERS "&nbsp;</b></legend>"
   "<form method='get' action='wi'>"
   "<p><b>" D_AP1_SSID "</b> (" STA_SSID1 ")<br><input id='s1' placeholder='" STA_SSID1 "' value='%s'></p>"
-  "<p><b>" D_AP1_PASSWORD "</b><br><input id='p1' type='password' placeholder='" D_AP1_PASSWORD "' value='" D_ASTERISK_PWD "'></p>"
+  "<p><b>" D_AP1_PASSWORD "</b><input type='checkbox' onclick='sp(\"p1\")'><br><input id='p1' type='password' placeholder='" D_AP1_PASSWORD "' value='" D_ASTERISK_PWD "'></p>"
   "<p><b>" D_AP2_SSID "</b> (" STA_SSID2 ")<br><input id='s2' placeholder='" STA_SSID2 "' value='%s'></p>"
-  "<p><b>" D_AP2_PASSWORD "</b><br><input id='p2' type='password' placeholder='" D_AP2_PASSWORD "' value='" D_ASTERISK_PWD "'></p>"
+  "<p><b>" D_AP2_PASSWORD "</b><input type='checkbox' onclick='sp(\"p2\")'><br><input id='p2' type='password' placeholder='" D_AP2_PASSWORD "' value='" D_ASTERISK_PWD "'></p>"
   "<p><b>" D_HOSTNAME "</b> (%s)<br><input id='h' placeholder='%s' value='%s'></p>";
 
 const char HTTP_FORM_LOG1[] PROGMEM =
@@ -376,7 +388,7 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<p><input id='t2' type='checkbox'%s><b>" D_ACTIVATE "</b></p>"
   "</fieldset>"
   "<br>"
-  "<b>" D_WEB_ADMIN_PASSWORD "</b><br><input id='wp' type='password' placeholder='" D_WEB_ADMIN_PASSWORD "' value='" D_ASTERIX "'><br>"
+  "<b>" D_WEB_ADMIN_PASSWORD "</b><input type='checkbox' onclick='sp(\"wp\")'><br><input id='wp' type='password' placeholder='" D_WEB_ADMIN_PASSWORD "' value='" D_ASTERISK_PWD "'><br>"
   "<br>"
   "<input id='b1' type='checkbox'%s><b>" D_MQTT_ENABLE "</b><br>"
   "<br>";
@@ -918,6 +930,7 @@ void HandleRoot(void)
 
   WSContentSend_P(PSTR("<div id='l1' name='l1'></div>"));
   if (devices_present) {
+#ifdef USE_LIGHT
     if (light_type) {
       if ((LST_COLDWARM == (light_type &7)) || (LST_RGBWC == (light_type &7))) {
         WSContentSend_P(HTTP_MSG_SLIDER1, LightGetColorTemp());
@@ -926,6 +939,7 @@ void HandleRoot(void)
         WSContentSend_P(HTTP_MSG_SLIDER2, Settings.light_dimmer);
       }
     }
+#endif
     WSContentSend_P(HTTP_TABLE100);
     WSContentSend_P(PSTR("<tr>"));
     if (SONOFF_IFAN02 == my_module_type) {
@@ -1759,9 +1773,14 @@ void HandleInformation(void)
   }
   WSContentSend_P(PSTR("}1}2&nbsp;"));  // Empty line
   if (Settings.flag.mqtt_enabled) {
+#ifdef USE_MQTT_AWS_IOT
+    WSContentSend_P(PSTR("}1" D_MQTT_HOST "}2%s%s"), Settings.mqtt_user, Settings.mqtt_host);
+    WSContentSend_P(PSTR("}1" D_MQTT_PORT "}2%d"), Settings.mqtt_port);
+#else
     WSContentSend_P(PSTR("}1" D_MQTT_HOST "}2%s"), Settings.mqtt_host);
     WSContentSend_P(PSTR("}1" D_MQTT_PORT "}2%d"), Settings.mqtt_port);
     WSContentSend_P(PSTR("}1" D_MQTT_USER "}2%s"), Settings.mqtt_user);
+#endif
     WSContentSend_P(PSTR("}1" D_MQTT_CLIENT "}2%s"), mqtt_client);
     WSContentSend_P(PSTR("}1" D_MQTT_TOPIC "}2%s"), Settings.mqtt_topic);
     WSContentSend_P(PSTR("}1" D_MQTT_GROUP_TOPIC "}2%s"), Settings.mqtt_grptopic);
@@ -2440,7 +2459,7 @@ bool WebCommand(void)
       strlcpy(Settings.web_password, (SC_CLEAR == Shortcut(XdrvMailbox.data)) ? "" : (SC_DEFAULT == Shortcut(XdrvMailbox.data)) ? WEB_PASSWORD : XdrvMailbox.data, sizeof(Settings.web_password));
       Response_P(S_JSON_COMMAND_SVALUE, command, Settings.web_password);
     } else {
-      Response_P(S_JSON_COMMAND_ASTERIX, command);
+      Response_P(S_JSON_COMMAND_ASTERISK, command);
     }
   }
   else if (CMND_WEBLOG == command_code) {
