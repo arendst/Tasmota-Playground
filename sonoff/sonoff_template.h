@@ -352,7 +352,8 @@ enum SupportedModules {
   SP10,
   WAGA,
   SYF05,
-  MAXMODULE };
+  SONOFF_L1,
+  MAXMODULE};
 
 #define USER_MODULE        255
 
@@ -656,6 +657,9 @@ const uint8_t kModuleNiceList[] PROGMEM = {
   SONOFF_T13,
   SONOFF_LED,          // Sonoff Light Devices
   SONOFF_BN,
+#ifdef USE_PS_16_DZ
+  SONOFF_L1,
+#endif
   SONOFF_B1,           // Sonoff Light Bulbs
   SLAMPHER,
   SONOFF_SC,           // Sonoff Environmemtal Sensor
@@ -1978,6 +1982,26 @@ const mytmplt kModules[MAXMODULE] PROGMEM = {
      0,                // GPIO15 wired to GND
      GPIO_USER,        // GPIO16 N.C.
      ADC0_USER         // ADC0 A0 Analog input
+  },
+  { "Sonoff L1",       // Sonoff L1 RGB LED controller (ESP8266 w/ separate Nuvoton MCU)
+     GPIO_USER,
+     GPIO_TXD,         // GPIO01 MCU serial control
+     GPIO_USER,
+     GPIO_RXD,         // GPIO03 MCU serial control
+     GPIO_USER,
+     GPIO_USER,
+                       // GPIO06 (SD_CLK   Flash)
+                       // GPIO07 (SD_DATA0 Flash QIO/DIO/DOUT)
+                       // GPIO08 (SD_DATA1 Flash QIO/DIO/DOUT)
+     0,                // GPIO09 (SD_DATA2 Flash QIO or ESP8285)
+     0,                // GPIO10 (SD_DATA3 Flash QIO or ESP8285)
+                       // GPIO11 (SD_CMD   Flash)
+     GPIO_USER,
+     GPIO_LED1,        // GPIO13 WiFi LED - Link and Power status
+     GPIO_USER,
+     GPIO_USER,
+     GPIO_USER,
+     0
   }
 };
 
