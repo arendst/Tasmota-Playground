@@ -7,6 +7,7 @@
 .piolibdeps
 .clang_complete
 .gcc-flags.json
+.cache
 sonoff/user_config_override.h
 build
 <<<<<<< HEAD
@@ -14,7 +15,11 @@ experimental
 README.md
 =======
 firmware.map
+<<<<<<< HEAD
 >>>>>>> e592fa9c024a518d73ed13e7ccfdfc8c2f7f525c
+=======
+firmware.asm
+>>>>>>> 397070900af3e0f0fc4785e68242b1668d584e91
 
 ## Visual Studio Code specific ######
 .vscode

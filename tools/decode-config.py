@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-VER = '2.2.0028'
+VER = '2.3.0034'
 
 """
     decode-config.py - Backup/Restore Sonoff-Tasmota configuration data
@@ -403,6 +403,11 @@ def MqttFingerprint(value, idx=None):
         fingerprint += "{:02x} ".format(ord(i))
     return "MqttFingerprint{} {}".format('' if idx is None else idx, fingerprint.strip())
 
+def WebSensor(value, idx):
+    cmd=[]
+    for i in range(0,32):
+        cmd.append("WebSensor{} {}".format(i+(idx-1)*32, "1" if (int(value,16) & (1<<i))!=0 else "0"))
+    return cmd
     
 # ----------------------------------------------------------------------
 # Tasmota configuration data definition
@@ -848,31 +853,31 @@ Setting_6_4_1_13.update            ({
                                     })
 # ======================================================================
 Setting_6_4_1_16 = copy.deepcopy(Setting_6_4_1_13)
-Setting_6_4_1_16.update({
-    'user_template_base':          ('B',   0x71F,       (None,  None,                           ('Management',  '"Template {}".format($)')), ('$ + 1','$ - 1') ),
-    'user_template':               ({
-        'name':                     ('15s', 0x720, (None, None,                                 ('Management',  '"Template {{\\\"NAME\\\":\\\"{}\\\"}}".format($)' )) ),
-        'gpio00':                   ('B',   0x72F, (None, None,                                 ('Management',  '"Template {{\\\"GPIO\\\":[{},{},{},{},{},{},{},{},{},{},{},{},{}]}}".format(@["user_template"]["gpio00"],@["user_template"]["gpio01"],@["user_template"]["gpio02"],@["user_template"]["gpio03"],@["user_template"]["gpio04"],@["user_template"]["gpio05"],@["user_template"]["gpio09"],@["user_template"]["gpio10"],@["user_template"]["gpio12"],@["user_template"]["gpio13"],@["user_template"]["gpio14"],@["user_template"]["gpio15"],@["user_template"]["gpio16"])')) ),
-        'gpio01':                   ('B',   0x730, (None, None,                                 ('Management',  None)) ),
-        'gpio02':                   ('B',   0x731, (None, None,                                 ('Management',  None)) ),
-        'gpio03':                   ('B',   0x732, (None, None,                                 ('Management',  None)) ),
-        'gpio04':                   ('B',   0x733, (None, None,                                 ('Management',  None)) ),
-        'gpio05':                   ('B',   0x734, (None, None,                                 ('Management',  None)) ),
-        'gpio09':                   ('B',   0x735, (None, None,                                 ('Management',  None)) ),
-        'gpio10':                   ('B',   0x736, (None, None,                                 ('Management',  None)) ),
-        'gpio12':                   ('B',   0x737, (None, None,                                 ('Management',  None)) ),
-        'gpio13':                   ('B',   0x738, (None, None,                                 ('Management',  None)) ),
-        'gpio14':                   ('B',   0x739, (None, None,                                 ('Management',  None)) ),
-        'gpio15':                   ('B',   0x73A, (None, None,                                 ('Management',  None)) ),
-        'gpio16':                   ('B',   0x73B, (None, None,                                 ('Management',  None)) ),
-        'flag':                         ({
-            '_':                            ('B',   0x73C     ,  (None, None,                   ('Management',  '"Template {{\\\"FLAG\\\":{}}}".format($)')),(None,  False) ),
-            'adc0':                         ('B',  (0x73C,1,0),  (None, None,                   ('Management',  None)) ),
-            'pullup':                       ('B',  (0x73C,1,1),  (None, None,                   ('Management',  None)) ),
-                                         },      0x73C,       (None, None,                      ('Management',  None))
-                                        ),
+Setting_6_4_1_16.update             ({
+    'user_template_base':           ('B',   0x71F,       (None,  None,                          ('Management',  '"Template {}".format($)')), ('$ + 1','$ - 1') ),
+    'user_template':                ({
+        'name':                     ('15s', 0x720,       (None, None,                           ('Management',  '"Template {{\\\"NAME\\\":\\\"{}\\\"}}".format($)' )) ),
+        'gpio00':                   ('B',   0x72F,       (None, None,                           ('Management',  '"Template {{\\\"GPIO\\\":[{},{},{},{},{},{},{},{},{},{},{},{},{}]}}".format(@["user_template"]["gpio00"],@["user_template"]["gpio01"],@["user_template"]["gpio02"],@["user_template"]["gpio03"],@["user_template"]["gpio04"],@["user_template"]["gpio05"],@["user_template"]["gpio09"],@["user_template"]["gpio10"],@["user_template"]["gpio12"],@["user_template"]["gpio13"],@["user_template"]["gpio14"],@["user_template"]["gpio15"],@["user_template"]["gpio16"])')) ),
+        'gpio01':                   ('B',   0x730,       (None, None,                           ('Management',  None)) ),
+        'gpio02':                   ('B',   0x731,       (None, None,                           ('Management',  None)) ),
+        'gpio03':                   ('B',   0x732,       (None, None,                           ('Management',  None)) ),
+        'gpio04':                   ('B',   0x733,       (None, None,                           ('Management',  None)) ),
+        'gpio05':                   ('B',   0x734,       (None, None,                           ('Management',  None)) ),
+        'gpio09':                   ('B',   0x735,       (None, None,                           ('Management',  None)) ),
+        'gpio10':                   ('B',   0x736,       (None, None,                           ('Management',  None)) ),
+        'gpio12':                   ('B',   0x737,       (None, None,                           ('Management',  None)) ),
+        'gpio13':                   ('B',   0x738,       (None, None,                           ('Management',  None)) ),
+        'gpio14':                   ('B',   0x739,       (None, None,                           ('Management',  None)) ),
+        'gpio15':                   ('B',   0x73A,       (None, None,                           ('Management',  None)) ),
+        'gpio16':                   ('B',   0x73B,       (None, None,                           ('Management',  None)) ),
+        'flag':                     ({
+            '_':                    ('B',   0x73C     ,  (None, None,                           ('Management',  '"Template {{\\\"FLAG\\\":{}}}".format($)')),(None,  False) ),
+            'adc0':                 ('B',  (0x73C,1,0),  (None, None,                           ('Management',  None)) ),
+            'pullup':               ('B',  (0x73C,1,1),  (None, None,                           ('Management',  None)) ),
+                                    },      0x73C,       (None, None,                           ('Management',  None))
+                                    ),
                                     },      0x720,       (None, None,                           ('Management',  None)) 
-                                   ),
+                                    ),
 })
 # ======================================================================
 Setting_6_4_1_17 = copy.deepcopy(Setting_6_4_1_16)
@@ -880,37 +885,37 @@ Setting_6_4_1_17['flag3'][0].pop('no_pullup',None)
 # ======================================================================
 Setting_6_4_1_18 = copy.deepcopy(Setting_6_4_1_17)
 Setting_6_4_1_18['flag3'][0].update ({
-        'no_hold_retain':                ('<L', (0x3A0,1,12), (None, None,                      ('SetOption',   '"SetOption62 {}".format($)')) ),
+        'no_hold_retain':           ('<L', (0x3A0,1,12), (None, None,                           ('SetOption',   '"SetOption62 {}".format($)')) ),
                                     })
 # ======================================================================
 Setting_6_5_0_3 = copy.deepcopy(Setting_6_4_1_18)
-Setting_6_5_0_3.update({
+Setting_6_5_0_3.update              ({
     'novasds_period':               ('B',   0x73D,       (None, '1 <= $ <= 255',                ('Sensor',      '"Sensor20 {}".format($)')) ),
                                     })
 # ======================================================================
 Setting_6_5_0_6 = copy.deepcopy(Setting_6_5_0_3)
-Setting_6_5_0_6.update({
-    'web_color':                    ('3B',   0x73E,       ([18], None,                          ('Wifi',        '"WebColor{} {}{:06x}".format(#,chr(35),int($,0))')), '"0x{:06x}".format($)' ),
+Setting_6_5_0_6.update              ({
+    'web_color':                    ('3B',  0x73E,       ([18], None,                           ('Wifi',        '"WebColor{} {}{:06x}".format(#,chr(35),int($,0))')), '"0x{:06x}".format($)' ),
                                     })
 # ======================================================================
 Setting_6_5_0_7 = copy.deepcopy(Setting_6_5_0_6)
-Setting_6_5_0_7.update({
-    'ledmask':                      ('<H',   0x7BC,       (None, None,                          ('Control',     '"LedMask {}".format($)')), '"0x{:04x}".format($)' ),
+Setting_6_5_0_7.update              ({
+    'ledmask':                      ('<H',  0x7BC,       (None, None,                           ('Control',     '"LedMask {}".format($)')), '"0x{:04x}".format($)' ),
                                     })
 # ======================================================================
 Setting_6_5_0_9 = copy.deepcopy(Setting_6_5_0_7)
 Setting_6_5_0_9['flag3'][0].update ({
-        'no_power_feedback':             ('<L', (0x3A0,1,13), (None, None,                      ('SetOption',   '"SetOption63 {}".format($)')) ),
+        'no_power_feedback':        ('<L', (0x3A0,1,13), (None, None,                           ('SetOption',   '"SetOption63 {}".format($)')) ),
                                     })
 # ======================================================================
 Setting_6_5_0_11 = copy.deepcopy(Setting_6_5_0_9)
 Setting_6_5_0_11['flag3'][0].update ({
-        'use_underscore':                ('<L', (0x3A0,1,14), (None, None,                      ('SetOption',   '"SetOption64 {}".format($)')) ),
+        'use_underscore':           ('<L', (0x3A0,1,14), (None, None,                           ('SetOption',   '"SetOption64 {}".format($)')) ),
                                     })
 # ======================================================================
 Setting_6_5_0_12 = copy.deepcopy(Setting_6_5_0_11)
 Setting_6_5_0_12.pop('drivers',None)
-Setting_6_5_0_12.update({
+Setting_6_5_0_12.update             ({
     'adc_param_type':               ('B',   0x1D5,       (None, '2 <= $ <= 3',                  ('Sensor',       '"AdcParam {type},{param1},{param2},{param3}".format(type=$,param1=@["adc_param1"],param2=@["adc_param2"],param3=@["adc_param3"]/10000.0)')) ),
     'adc_param1':                   ('<L',  0x794,       (None, None,                           ('Sensor',       None)) ),
     'adc_param2':                   ('<L',  0x798,       (None, None,                           ('Sensor',       None)) ),
@@ -920,10 +925,108 @@ Setting_6_5_0_12.update({
 # ======================================================================
 Setting_6_5_0_15 = copy.deepcopy(Setting_6_5_0_12)
 Setting_6_5_0_15['flag3'][0].update ({
-        'tuya_show_dimmer':              ('<L', (0x3A0,1,15), (None, None,                      ('SetOption',   '"SetOption65 {}".format($)')) ),
+        'tuya_show_dimmer':         ('<L', (0x3A0,1,15), (None, None,                           ('SetOption',   '"SetOption65 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_1 = copy.deepcopy(Setting_6_5_0_15)
+Setting_6_6_0_1['flag3'][0].update ({
+        'tuya_dimmer_range_255':    ('<L', (0x3A0,1,16), (None, None,                           ('SetOption',   '"SetOption66 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_2 = copy.deepcopy(Setting_6_6_0_1)
+Setting_6_6_0_2['flag3'][0].update ({
+        'buzzer_enable':            ('<L', (0x3A0,1,17), (None, None,                           ('SetOption',   '"SetOption67 {}".format($)')) ),
+                                    })
+Setting_6_6_0_2.update              ({
+    'display_width':                ('<H',  0x774,       (None, None,                           ('Display',     '"DisplayWidth {}".format($)')) ),
+    'display_height':               ('<H',  0x776,       (None, None,                           ('Display',     '"DisplayHeight {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_3 = copy.deepcopy(Setting_6_6_0_2)
+Setting_6_6_0_3['flag3'][0].update ({
+        'pwm_multi_channels':       ('<L', (0x3A0,1,18), (None, None,                           ('SetOption',   '"SetOption68 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_5 = copy.deepcopy(Setting_6_6_0_3)
+Setting_6_6_0_5.update              ({
+    'sensors':                      ('<L',  0x7A4,       ([3],  None,                           ('Wifi',        WebSensor)), '"0x{:08x}".format($)' ),
+                                    })
+Setting_6_6_0_5['flag3'][0].update ({
+        'tuya_dimmer_min_limit':    ('<L', (0x3A0,1,19), (None, None,                           ('SetOption',   '"SetOption69 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_6 = copy.deepcopy(Setting_6_6_0_5)
+Setting_6_6_0_6['flag3'][0].pop('tuya_show_dimmer',None)
+Setting_6_6_0_6['flag3'][0].update ({
+        'tuya_disable_dimmer':      ('<L', (0x3A0,1,15), (None, None,                           ('SetOption',   '"SetOption65 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_7 = copy.deepcopy(Setting_6_6_0_6)
+Setting_6_6_0_7.update              ({
+    'energy_usage':                 ({
+        'usage1_kWhtotal':          ('<L',  0x77C,       (None, None,                           ('Power',       None)) ),
+        'usage1_kWhtoday':          ('<L',  0x780,       (None, None,                           ('Power',       None)) ),
+        'return1_kWhtotal':         ('<L',  0x784,       (None, None,                           ('Power',       None)) ),
+        'return2_kWhtotal':         ('<L',  0x788,       (None, None,                           ('Power',       None)) ),
+        'last_usage_kWhtotal':      ('<L',  0x78C,       (None, None,                           ('Power',       None)) ),
+        'last_return_kWhtotal':     ('<L',  0x790,       (None, None,                           ('Power',       None)) ),
+                                    },      0x77C,       (None, None,                           ('Power',       None)) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_8 = copy.deepcopy(Setting_6_6_0_7)
+Setting_6_6_0_8['flag3'][0].update ({
+        'energy_weekend':           ('<L', (0x3A0,1,20), (None, None,                           ('Power',       '"Tariff3 {}".format($)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_9 = copy.deepcopy(Setting_6_6_0_8)
+Setting_6_6_0_9.update              ({
+    'baudrate':                     ('<H',  0x778,       (None, None,                           ('Serial',      '"Baudrate {}".format($)')), ('$ * 1200','$ / 1200') ),
+    'sbaudrate':                    ('<H',  0x77A,       (None, None,                           ('Serial',      '"SBaudrate {}".format($)')), ('$ * 1200','$ / 1200') ),
+                                    })
+# ======================================================================
+Setting_6_6_0_10 = copy.deepcopy(Setting_6_6_0_9)
+Setting_6_6_0_10.update             ({
+    'cfg_timestamp':                ('<L',  0xFF8,       (None, None,                           (INTERNAL,      None)) ),
+    'cfg_crc32':                    ('<L',  0xFFC,       (None, None,                           (INTERNAL,      None)), '"0x{:08x}".format($)' ),
+    'tuya_fnid_map':                ({
+        'fnid':                     ('B',   0xE00,       (None, None,                           ('Management',  '"TuyaMCU {},{}".format($,@["tuya_fnid_map"][#-1]["dpid"]) if ($!=0 or @["tuya_fnid_map"][#-1]["dpid"]!=0) else None')) ),
+        'dpid':                     ('B',   0xE01,       (None, None,                           ('Management',  None)) ),
+                                    },      0xE00,       ([16], None,                           ('Management',  None)), (None,      None) ),
+                                    })
+Setting_6_6_0_10['flag2'][0].update ({
+        'time_format':              ('<L', (0x5BC,2, 4), (None, None,                           ('Management', '"Time {}".format($+1)')) ),
+                                    })
+Setting_6_6_0_10['flag3'][0].pop('tuya_show_dimmer',None)
+# ======================================================================
+Setting_6_6_0_11 = copy.deepcopy(Setting_6_6_0_10)
+Setting_6_6_0_11.update             ({
+    'ina226_r_shunt':               ('<H',  0xE20,       ([4], None,                            ('Power',       '"Sensor54 {}1 {}".format(#,$)')) ),
+    'ina226_i_fs':                  ('<H',  0xE28,       ([4], None,                            ('Power',       '"Sensor54 {}2 {}".format(#,$)')) ),
+                                    })
+# ======================================================================
+Setting_6_6_0_12 = copy.deepcopy(Setting_6_6_0_11)
+Setting_6_6_0_12.update             ({
+    'register8_ENERGY_TARIFF1_ST':  ('B',   0x1D6,       (None, None,                           ('Power',       '"Tariff1 {},{}".format($,@["register8_ENERGY_TARIFF1_DS"])')) ),
+    'register8_ENERGY_TARIFF2_ST':  ('B',   0x1D7,       (None, None,                           ('Power',       '"Tariff2 {},{}".format($,@["register8_ENERGY_TARIFF2_DS"])')) ),
+    'register8_ENERGY_TARIFF1_DS':  ('B',   0x1D8,       (None, None,                           ('Power',       None)) ),
+    'register8_ENERGY_TARIFF2_DS':  ('B',   0x1D9,       (None, None,                           ('Power',       None)) ),
+                                    })
+Setting_6_6_0_12['flag3'][0].update ({
+        'energy_weekend':           ('<L', (0x3A0,1,20), (None, None,                           ('Power',       '"Tariff9 {}".format($)')) ),
                                     })
 # ======================================================================
 Settings = [
+            (0x606000C,0x1000, Setting_6_6_0_12),
+            (0x606000B,0x1000, Setting_6_6_0_11),
+            (0x606000A,0x1000, Setting_6_6_0_10),
+            (0x6060009,0x1000, Setting_6_6_0_9),
+            (0x6060008,0x1000, Setting_6_6_0_8),
+            (0x6060007,0x1000, Setting_6_6_0_7),
+            (0x6060006, 0xe00, Setting_6_6_0_6),
+            (0x6060005, 0xe00, Setting_6_6_0_5),
+            (0x6060003, 0xe00, Setting_6_6_0_3),
+            (0x6060002, 0xe00, Setting_6_6_0_2),
+            (0x6060001, 0xe00, Setting_6_6_0_1),
             (0x605000F, 0xe00, Setting_6_5_0_15),
             (0x605000C, 0xe00, Setting_6_5_0_12),
             (0x605000B, 0xe00, Setting_6_5_0_11),
@@ -1612,13 +1715,38 @@ def GetSettingsCrc(dobj):
     """
     if isinstance(dobj, bytearray):
         dobj = str(dobj)
+    version, size, setting = GetTemplateSetting(dobj)
+    if version < 0x06060007 or version > 0x0606000A:
+        size = 3584
     crc = 0
-    for i in range(0, len(dobj)):
+    for i in range(0, size):
         if not i in [14,15]: # Skip crc
             byte = ord(dobj[i])
             crc += byte * (i+1)
 
     return crc & 0xffff
+
+
+def GetSettingsCrc32(dobj):
+    """
+    Return binary config data calclulated crc32
+
+    @param dobj:
+        decrypted binary config data
+
+    @return:
+        4 byte unsigned integer crc value
+
+    """
+    if isinstance(dobj, bytearray):
+        dobj = str(dobj)
+    crc = 0
+    for i in range(0, len(dobj)-4):
+        crc ^= ord(dobj[i])
+        for j in range(0, 8):
+            crc = (crc >> 1) ^ (-int(crc & 1) & 0xEDB88320);
+
+    return ~crc & 0xffffffff
 
 
 def GetFieldDef(fielddef, fields="format_, addrdef, baseaddr, bits, bitshift, datadef, arraydef, validate, cmd, group, tasmotacmnd, converter, readconverter, writeconverter"):
@@ -1794,7 +1922,7 @@ def CmndConverter(valuemapping, value, idx, fielddef):
         field definition - see "Settings dictionary" above
 
     @return:
-        converted value or None if unable to convert
+        converted value, list of values or None if unable to convert
     """
     converter, readconverter, writeconverter, group, tasmotacmnd = GetFieldDef(fielddef, fields='converter, readconverter, writeconverter, group, tasmotacmnd')
 
@@ -2432,6 +2560,8 @@ def SetCmnd(cmnds, fieldname, fielddef, valuemapping, mappedvalue, addroffset=0,
 
     # a simple value
     elif isinstance(format_, (str, bool, int, float, long)):
+        if group is not None:
+            group = group.title();
         if isinstance(tasmotacmnd, tuple):
             tasmotacmnds = tasmotacmnd
             for tasmotacmnd in tasmotacmnds:
@@ -2439,13 +2569,21 @@ def SetCmnd(cmnds, fieldname, fielddef, valuemapping, mappedvalue, addroffset=0,
                 if group is not None and cmnd is not None:
                     if group not in cmnds:
                         cmnds[group] = []
-                    cmnds[group].append(cmnd)
+                    if isinstance(cmnd, list):
+                        for c in cmnd:
+                            cmnds[group].append(c)
+                    else:
+                        cmnds[group].append(cmnd)
         else:
             cmnd = CmndConverter(valuemapping, mappedvalue, idx, fielddef)
             if group is not None and cmnd is not None:
                 if group not in cmnds:
                     cmnds[group] = []
-                cmnds[group].append(cmnd)
+                if isinstance(cmnd, list):
+                    for c in cmnd:
+                        cmnds[group].append(c)
+                else:
+                    cmnds[group].append(cmnd)
 
     return cmnds
 
@@ -2489,8 +2627,16 @@ def Bin2Mapping(decode_cfg):
         cfg_crc = GetField(decode_cfg, 'cfg_crc', setting['cfg_crc'], raw=True)
     else:
         cfg_crc = GetSettingsCrc(decode_cfg)
-    if cfg_crc != GetSettingsCrc(decode_cfg):
-        exit(ExitCode.DATA_CRC_ERROR, 'Data CRC error, read 0x{:x} should be 0x{:x}'.format(cfg_crc, GetSettingsCrc(decode_cfg)), type_=LogType.WARNING, doexit=not args.ignorewarning,line=inspect.getlineno(inspect.currentframe()))
+    if 'cfg_crc32' in setting:
+        cfg_crc32 = GetField(decode_cfg, 'cfg_crc32', setting['cfg_crc32'], raw=True)
+    else:
+        cfg_crc32 = GetSettingsCrc32(decode_cfg)
+    if version < 0x0606000B:
+        if cfg_crc != GetSettingsCrc(decode_cfg):
+            exit(ExitCode.DATA_CRC_ERROR, 'Data CRC error, read 0x{:4x} should be 0x{:4x}'.format(cfg_crc, GetSettingsCrc(decode_cfg)), type_=LogType.WARNING, doexit=not args.ignorewarning,line=inspect.getlineno(inspect.currentframe()))
+    else:
+        if cfg_crc32 != GetSettingsCrc32(decode_cfg):
+            exit(ExitCode.DATA_CRC_ERROR, 'Data CRC32 error, read 0x{:8x} should be 0x{:8x}'.format(cfg_crc32, GetSettingsCrc32(decode_cfg)), type_=LogType.WARNING, doexit=not args.ignorewarning,line=inspect.getlineno(inspect.currentframe()))
 
     # get valuemapping
     valuemapping = GetField(decode_cfg, None, (setting,0,(None, None, (INTERNAL, None))))
@@ -2521,6 +2667,9 @@ def Bin2Mapping(decode_cfg):
                              }
     if 'cfg_crc' in setting:
         valuemapping['header']['template'].update({'size': cfg_size})
+    if 'cfg_crc32' in setting:
+        valuemapping['header']['template'].update({'crc32': cfg_crc32})
+        valuemapping['header']['data'].update({'crc32': hex(GetSettingsCrc32(decode_cfg))})
     if 'version' in setting:
         valuemapping['header']['data'].update({'version': hex(cfg_version)})
 
@@ -2566,6 +2715,9 @@ def Mapping2Bin(decode_cfg, jsonconfig, filename=""):
         if 'cfg_crc' in setting:
             crc = GetSettingsCrc(_buffer)
             struct.pack_into(setting['cfg_crc'][0], _buffer, setting['cfg_crc'][1], crc)
+        if 'cfg_crc32' in setting:
+            crc32 = GetSettingsCrc32(_buffer)
+            struct.pack_into(setting['cfg_crc32'][0], _buffer, setting['cfg_crc32'][1], crc32)
         return _buffer
 
     else:
