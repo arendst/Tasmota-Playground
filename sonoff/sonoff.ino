@@ -130,6 +130,7 @@ uint8_t led_power = 0;                      // LED power state
 uint8_t ledlnk_inverted = 0;                // Link LED inverted flag (1 = (0 = On, 1 = Off))
 uint8_t pwm_inverted = 0;                   // PWM inverted flag (1 = inverted)
 uint8_t energy_flg = 0;                     // Energy monitor configured
+uint8_t light_flg = 0;                      // Light module configured
 uint8_t light_type = 0;                     // Light types
 uint8_t serial_in_byte;                     // Received byte
 uint8_t ota_retry_counter = OTA_ATTEMPTS;   // OTA retry counter
@@ -138,6 +139,8 @@ uint8_t seriallog_level;                    // Current copy of Settings.seriallo
 uint8_t syslog_level;                       // Current copy of Settings.syslog_level
 uint8_t my_module_type;                     // Current copy of Settings.module or user template type
 uint8_t my_adc0;                            // Active copy of Module ADC0
+uint8_t last_source = 0;                    // Last command source
+uint8_t shutters_present = 0;               // Number of actual define shutters
 //uint8_t mdns_delayed_start = 0;             // mDNS delayed start
 bool serial_local = false;                  // Handle serial locally;
 bool fallback_topic_flag = false;           // Use Topic or FallbackTopic
@@ -313,6 +316,7 @@ void SetLatchingRelay(power_t lpower, uint32_t state)
 void SetDevicePower(power_t rpower, uint32_t source)
 {
   ShowSource(source);
+  last_source = source;
 
   if (POWER_ALL_ALWAYS_ON == Settings.poweronstate) {  // All on and stay on
     power = (1 << devices_present) -1;
@@ -745,10 +749,7 @@ bool MqttShowSensor(void)
     }
   }
   XsnsCall(FUNC_JSON_APPEND);
-
-#ifdef USE_SCRIPT_JSON_EXPORT
   XdrvCall(FUNC_JSON_APPEND);
-#endif
 
   bool json_data_available = (strlen(mqtt_data) - json_data_start);
   if (strstr_P(mqtt_data, PSTR(D_JSON_PRESSURE)) != nullptr) {
@@ -867,21 +868,6 @@ void Every100mSeconds(void)
         power_now = (power & (POWER_MASK ^ blink_mask)) | ((blink_power) ? blink_mask : 0);
         SetDevicePower(power_now, SRC_IGNORE);
       }
-    }
-  }
-
-  // Backlog
-  if (TimeReached(backlog_delay)) {
-    if (!BACKLOG_EMPTY && !backlog_mutex) {
-      backlog_mutex = true;
-#ifdef SUPPORT_IF_STATEMENT
-      ExecuteCommand((char*)backlog.shift().c_str(), SRC_BACKLOG);
-#else
-      ExecuteCommand((char*)backlog[backlog_pointer].c_str(), SRC_BACKLOG);
-      backlog_pointer++;
-      if (backlog_pointer >= MAX_BACKLOG) { backlog_pointer = 0; }
-#endif
-      backlog_mutex = false;
     }
   }
 }
@@ -1388,22 +1374,14 @@ void GpioInit(void)
   }
 #endif  // USE_I2C
 
-  devices_present = 1;
-
+  devices_present = 0;
   light_type = LT_BASIC;                     // Use basic PWM control if SetOption15 = 0
-#ifdef USE_LIGHT
-  if (Settings.flag.pwm_control) {
-    for (uint32_t i = 0; i < MAX_PWMS; i++) {
-      if (pin[GPIO_PWM1 +i] < 99) { light_type++; }  // Use Dimmer/Color control for all PWM as SetOption15 = 1
-    }
-  }
-#endif  // USE_LIGHT
-
   if (XdrvCall(FUNC_MODULE_INIT)) {
     // Serviced
   }
   else if (YTF_IR_BRIDGE == my_module_type) {
     ClaimSerial();  // Stop serial loopback mode
+//    devices_present = 1;
   }
   else if (SONOFF_DUAL == my_module_type) {
     Settings.flag.mqtt_serial = 0;
@@ -1420,30 +1398,23 @@ void GpioInit(void)
     devices_present = 0;
     baudrate = 19200;
   }
-#ifdef USE_LIGHT
-  else if (SONOFF_BN == my_module_type) {   // PWM Single color led (White)
-    light_type = LT_PWM1;
+
+  if (!light_type) {
+    for (uint32_t i = 0; i < MAX_PWMS; i++) {     // Basic PWM control only
+      if (pin[GPIO_PWM1 +i] < 99) {
+        pwm_present = true;
+        pinMode(pin[GPIO_PWM1 +i], OUTPUT);
+        analogWrite(pin[GPIO_PWM1 +i], bitRead(pwm_inverted, i) ? Settings.pwm_range - Settings.pwm_value[i] : Settings.pwm_value[i]);
+      }
+    }
   }
-  else if (SONOFF_LED == my_module_type) {  // PWM Dual color led (White warm and cold)
-    light_type = LT_PWM2;
-  }
-  else if (AILIGHT == my_module_type) {     // RGBW led
-    light_type = LT_RGBW;
-  }
-  else if (SONOFF_B1 == my_module_type) {   // RGBWC led
-    light_type = LT_RGBWC;
-  }
-#endif  // USE_LIGHT
-  else {
-    if (!light_type) { devices_present = 0; }
-    for (uint32_t i = 0; i < MAX_RELAYS; i++) {
-      if (pin[GPIO_REL1 +i] < 99) {
-        pinMode(pin[GPIO_REL1 +i], OUTPUT);
-        devices_present++;
-        if (EXS_RELAY == my_module_type) {
-          digitalWrite(pin[GPIO_REL1 +i], bitRead(rel_inverted, i) ? 1 : 0);
-          if (i &1) { devices_present--; }
-        }
+  for (uint32_t i = 0; i < MAX_RELAYS; i++) {
+    if (pin[GPIO_REL1 +i] < 99) {
+      pinMode(pin[GPIO_REL1 +i], OUTPUT);
+      devices_present++;
+      if (EXS_RELAY == my_module_type) {
+        digitalWrite(pin[GPIO_REL1 +i], bitRead(rel_inverted, i) ? 1 : 0);
+        if (i &1) { devices_present--; }
       }
     }
   }
@@ -1474,37 +1445,6 @@ void GpioInit(void)
 #ifdef ROTARY_V1
   RotaryInit();
 #endif
-
-#ifdef USE_LIGHT
-#ifdef USE_WS2812
-  if (!light_type && (pin[GPIO_WS2812] < 99)) {  // RGB led
-    devices_present++;
-    light_type = LT_WS2812;
-  }
-#endif  // USE_WS2812
-#ifdef USE_SM16716
-  if (SM16716_ModuleSelected()) {
-    light_type += 3;
-    light_type |= LT_SM16716;
-  }
-#endif  // USE_SM16716
-
-  // post-process for lights
-  if (Settings.flag3.pwm_multi_channels) {
-    uint32_t pwm_channels = (light_type & 7) > LST_MAX ? LST_MAX : (light_type & 7);
-    if (0 == pwm_channels) { pwm_channels = 1; }
-    devices_present += pwm_channels - 1;  // add the pwm channels controls at the end
-  }
-#endif  // USE_LIGHT
-  if (!light_type) {
-    for (uint32_t i = 0; i < MAX_PWMS; i++) {     // Basic PWM control only
-      if (pin[GPIO_PWM1 +i] < 99) {
-        pwm_present = true;
-        pinMode(pin[GPIO_PWM1 +i], OUTPUT);
-        analogWrite(pin[GPIO_PWM1 +i], bitRead(pwm_inverted, i) ? Settings.pwm_range - Settings.pwm_value[i] : Settings.pwm_value[i]);
-      }
-    }
-  }
 
   SetLedPower(Settings.ledstate &8);
   SetLedLink(Settings.ledstate &8);
@@ -1674,6 +1614,23 @@ void setup(void)
   XsnsCall(FUNC_INIT);
 }
 
+static void BacklogLoop()
+{
+  if (TimeReached(backlog_delay)) {
+    if (!BACKLOG_EMPTY && !backlog_mutex) {
+      backlog_mutex = true;
+#ifdef SUPPORT_IF_STATEMENT
+      ExecuteCommand((char*)backlog.shift().c_str(), SRC_BACKLOG);
+#else
+      ExecuteCommand((char*)backlog[backlog_pointer].c_str(), SRC_BACKLOG);
+      backlog_pointer++;
+      if (backlog_pointer >= MAX_BACKLOG) { backlog_pointer = 0; }
+#endif
+      backlog_mutex = false;
+    }
+  }
+}
+
 void loop(void)
 {
   uint32_t my_sleep = millis();
@@ -1688,6 +1645,7 @@ void loop(void)
 #ifdef ROTARY_V1
   RotaryLoop();
 #endif
+  BacklogLoop();
 
   if (TimeReached(state_50msecond)) {
     SetNextTimeInterval(state_50msecond, 50);

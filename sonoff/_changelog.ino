@@ -1,4 +1,34 @@
 /*********************************************************************************************\
+ * 6.6.0.17 20191009
+ * Add command SetOption34 0..255 to set backlog delay. Default value is 200 (mSeconds) (#6562)
+ *
+ * 6.6.0.16 20191008
+ * Change PZEM004T default address mask from 0.0.0.x to 192.168.1.x for legacy reason (#6585)
+ * Fix PZEM004T, PZEMAC and PZEMDC autodetection (#6585)
+ * Change light drivers internals to ease management
+ *
+ * 6.6.0.15 20191003
+ * Change command PulseTime JSON message format and allow display of all pulsetimer information (#6519)
+ * Add support for Chint DDSU666 Modbus energy meter by Pablo Zerón
+ * Add support for SM2135 as used in Action LSC Smart Led E14 (#6495)
+ * Add command SetOption72 0/1 to switch between software (0) or hardware (1) energy total counter (#6561)
+ * Add Zigbee tracking of connected devices and auto-probing of Manuf/Model Ids
+ * Fix better handling of PWM White Temperature mode for Module 48 (#6534)
+ *
+ * 6.6.0.14 20190925
+ * Change command Tariffx to allow time entries like 23 (hours), 1320 (minutes) or 23:00. NOTE: As this is development branch previous tariffs are lost! (#6488)
+ * Remove support for define USE_DS18x20_LEGACY and legacy DS18x20 driver (#6486)
+ * Add initial support for MQTT logging using command MqttLog <loglevel> (#6498)
+ * Add Zigbee more support - collect endpoints and clusters, added ZigbeeDump command
+ * Add initial support for shutters by Stefan Bode (#288)
+ * Add command to MCP230xx: sensor29 pin,0/1/2 for OFF/ON/TOGGLE
+ * Add initial support for PCF8574 I2C I/O Expander (currently output only) by Stefan Bode
+ * Add command SetOption71 0/1 to switch between different Modbus Active Energy registers on DDS238-2 energy meters (#6531)
+ * Change command SetOption43 to make it more general. Now supports PS_16_DZ driver too (#6544)
+ * Change command handling by moving buffers up in chain solving MQTTlog support (#6529)
+ * Change detection of non-MQTT commands by allowing non-space characters as delimiter (#6540)
+ * Fix TasmotaSerial: move serial send to IRAM for high speed baud rates
+ *
  * 6.6.0.13 20190922
  * Add command EnergyReset4 x,x to initialize total usage for two tarrifs
  * Add command EnergyReset5 x,x to initialize total export (or production) for two tarrifs
