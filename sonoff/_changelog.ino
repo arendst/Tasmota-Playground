@@ -1,6 +1,10 @@
 /*********************************************************************************************\
+ * 6.6.0.18 20191010
+ * Add command DimmerRange in Light module to support 2 byte dimming ranges from Tuya
+ *
  * 6.6.0.17 20191009
  * Add command SetOption34 0..255 to set backlog delay. Default value is 200 (mSeconds) (#6562)
+ * Add command Gpio 255 to show physical GPIO configuration of all non-flash pins (#6407)
  *
  * 6.6.0.16 20191008
  * Change PZEM004T default address mask from 0.0.0.x to 192.168.1.x for legacy reason (#6585)
