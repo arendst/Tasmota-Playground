@@ -308,6 +308,7 @@
 //  #define SUPPORT_MQTT_EVENT                     // Support trigger event with MQTT subscriptions (+3k5 code)
 
 // -- Optional modules ----------------------------
+#define USE_SONOFF_SC                            // Add support for Sonoff Sc (+1k1 code)
 #define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 #define USE_SONOFF_IFAN                          // Add support for Sonoff iFan02 and iFan03 (+2k code)
 #define USE_TUYA_MCU                             // Add support for Tuya Serial MCU
@@ -316,6 +317,7 @@
 #define USE_PS_16_DZ                             // Add support for PS-16-DZ Dimmer and Sonoff L1 (+2k code)
 //#define ROTARY_V1                                // Add support for MI Desk Lamp
 //#define USE_SHUTTER                              // Add Shutter support for up to 4 shutter with different motortypes (+6k code)
+//#define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
 
 // -- Optional light modules ----------------------
 #define USE_WS2812                               // WS2812 Led string using library NeoPixelBus (+5k code, +1k mem, 232 iram) - Disable by //

@@ -462,9 +462,12 @@ void GetFeatures(void)
 #ifdef USE_DDSU666
   feature5 |= 0x00000400;  // Xnrg_11_ddsu666.ino
 #endif
-//  feature5 |= 0x00000800;
-
-//  feature5 |= 0x00001000;
+#ifdef USE_DEEPSLEEP
+  feature5 |= 0x00000800;  // Xdrv_029_deepsleep.ino
+#endif
+#ifdef USE_SONOFF_SC
+  feature5 |= 0x00001000;
+#endif
 //  feature5 |= 0x00002000;
 //  feature5 |= 0x00004000;
 //  feature5 |= 0x00008000;
