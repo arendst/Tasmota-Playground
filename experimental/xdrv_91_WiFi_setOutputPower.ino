@@ -8,7 +8,7 @@
   
   xdrv_91_WiFi_setOutputPower.ino - Allow use of WiFi.setOutputPower(New_dBm); through command:
 
-  Driver91 New_dBm
+  WifiPower New_dBm
 
   Where New_dBm is an inclusive value of 0 through 20.5
 
@@ -28,9 +28,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define XDRV_91 91
+#define XDRV_91                     91
 
-bool Xdrv91_Command(void)
+const char kWifiPowerCommands[] PROGMEM = "|"  // No prefix
+  "WifiPower" ;
+
+void (* const WifiPowerCommand[])(void) PROGMEM = {
+  &CmndWifiPower };
+
+void CmndWifiPower(void)
 {
   bool serviced = true;
   uint8_t paramcount = 0;
@@ -38,7 +44,7 @@ bool Xdrv91_Command(void)
     paramcount=1;
   } else {
     serviced = false;
-    return serviced;
+    return;
   }
   char sub_string[XdrvMailbox.data_len+1];
   char tmp_string[5];
@@ -48,12 +54,9 @@ bool Xdrv91_Command(void)
   if (New_dBm > 20.5) { New_dBm = 20.5; }
   dtostrf(New_dBm, 2, 1, tmp_string);
   WiFi.setOutputPower(New_dBm);
-  snprintf_P(log_data, sizeof(log_data), PSTR("WIF: WiFi.setOutputPower(%s);"),tmp_string);
-  AddLog(LOG_LEVEL_INFO);
-  snprintf_P(mqtt_data, sizeof(mqtt_data), PSTR("{\"Driver91\":{\"WiFi.setOutputPower\":%s}}"),tmp_string);
-  serviced = true;
-  
-  return serviced;
+  char tmp_response[32];
+  sprintf(tmp_response,"WifiPower = %s", tmp_string);
+  ResponseCmndChar(tmp_response);
 }
 
 bool Xdrv91(byte function)
@@ -61,10 +64,8 @@ bool Xdrv91(byte function)
   bool result = false;
   switch (function) {
     case FUNC_COMMAND:
-        if (XDRV_91 == XdrvMailbox.index) {
-          result = Xdrv91_Command();
-        }
-        break;
+      result = DecodeCommand(kWifiPowerCommands, WifiPowerCommand);
+      break;
   }
   return result;
 }
