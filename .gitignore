@@ -19,7 +19,13 @@ firmware.map
 >>>>>>> e592fa9c024a518d73ed13e7ccfdfc8c2f7f525c
 =======
 firmware.asm
+<<<<<<< HEAD
 >>>>>>> 397070900af3e0f0fc4785e68242b1668d584e91
+=======
+tasmota*.bin
+tasmota*.map
+platformio_override.ini
+>>>>>>> 8cf2d15ed1c09645cc1c33fca9a6376ed4b635f0
 
 ## Visual Studio Code specific ######
 .vscode

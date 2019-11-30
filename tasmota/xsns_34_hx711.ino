@@ -90,7 +90,7 @@ bool HxIsReady(uint16_t timeout)
   return (digitalRead(Hx.pin_dout) == LOW);
 }
 
-long HxRead()
+long HxRead(void)
 {
   if (!HxIsReady(HX_TIMEOUT)) { return -1; }
 
@@ -241,7 +241,7 @@ bool HxCommand(void)
 
 /*********************************************************************************************/
 
-long HxWeight()
+long HxWeight(void)
 {
   return (Hx.calibrate_step < HX_CAL_FAIL) ? Hx.weight : 0;
 }
@@ -360,7 +360,7 @@ void HxEvery100mSecond(void)
           ResponseAppendTime();
           HxShow(true);
           ResponseJsonEnd();
-          MqttPublishPrefixTopic_P(TELE, PSTR(D_RSLT_SENSOR), Settings.flag.mqtt_sensor_retain);  // CMND_SENSORRETAIN
+          MqttPublishTeleSensor();
           Hx.weight_changed = false;
         }
       }
@@ -371,7 +371,7 @@ void HxEvery100mSecond(void)
   }
 }
 
-void HxSaveBeforeRestart()
+void HxSaveBeforeRestart(void)
 {
   Settings.energy_frequency_calibration = Hx.weight;
   Hx.sample_count = HX_SAMPLES +1;                   // Stop updating Hx.weight
